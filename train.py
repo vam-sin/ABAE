@@ -7,19 +7,20 @@ import pickle
 from src.sent_embeddings import calculate_ys, calculate_zs
 from src.sent_reconstruction import calculate_rs
 from src.hinge_loss import regularized_loss_value
+from src.aspect_retrieval import retrieve_aspects
 from torch.autograd import Variable
 
 # Tasks
 # 1. Use the functions to get the aspects. Done
 # 2. Reconstruct the sentence. Done
-# 3. Convert to tensors.
-# 4. Loss function optimization. Working
+# 3. Convert to tensors. Done
+# 4. Loss function optimization. Done
+# 5. Implement the negative sampling part in training.
 
 # Hyperparameters
-epochs = 15
+epochs = 100
 l = 1 # lambda hyperparameter
-batch_size = 50
-lr = 0.001 # learning rate
+lr = 0.0001 # learning rate
 m = 20 # negative samples for each input
 
 # Model
@@ -76,12 +77,27 @@ for i in range(epochs):
     epoch_loss = 0.0
     optimizer.zero_grad()
     print("Epoch Number: " + str(i))
-    for j in range(1, len(reviews)):
-        rs, ys, zs = abae(reviews[j])
-        loss = regularized_loss_value(rs, zs, ys, T, l)
-        epoch_loss += loss.sum()
+    j = 1
+    while (len(reviews)-m)-j >= 0:
+        # Negative Sampling
+        loss = 0.0
+        for k in range(j, j+m):
+            rs, ys, zs = abae(reviews[k])
+            rev_loss = regularized_loss_value(rs, zs, ys, T, l)
+            loss += rev_loss.sum()
+            epoch_loss += rev_loss.sum()
 
         loss.sum().backward()
         optimizer.step()
+        print(j)
+        j += m
 
     print("Epoch Loss: " + str(epoch_loss) +"\n")
+
+# The T matrix represents the 14 aspects predicted
+outfile = open('aspects_emeddings.pickle','wb')
+pickle.dump(T ,outfile)
+outfile.close()
+
+# Print all the aspects
+retrieve_aspects(T)
