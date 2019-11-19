@@ -10,11 +10,16 @@ nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))
 
 def calculate_ys(sentence, E, unique_words):
-    ys = 0
+    sentence = word_tokenize(sentence)
+    process_sent = []
     for i in sentence:
+        if i not in stop_words:
+            process_sent.append(i)
+    ys = 0
+    for i in process_sent:
         ys += get_word_embedding(i, E, unique_words)
 
-    return ys/len(sentence)
+    return ys/len(process_sent)
 
 def calculate_di(word, M, ys, E, unique_words):
 
@@ -39,9 +44,14 @@ def calculate_ai(word, sentence, M, ys, E, unique_words):
     return num/denom
 
 def calculate_zs(sentence, M, ys, E, unique_words):
+    sentence = word_tokenize(sentence)
+    process_sent = []
+    for i in sentence:
+        if i not in stop_words:
+            process_sent.append(i)
     zs = 0
-    for word in sentence:
-        zs+= calculate_ai(word, sentence, M, ys, E, unique_words) * get_word_embedding(word, E, unique_words)
+    for word in process_sent:
+        zs+= calculate_ai(word, process_sent, M, ys, E, unique_words) * get_word_embedding(word, E, unique_words)
 
     return zs
 
@@ -62,14 +72,9 @@ if __name__ == '__main__':
     infile.close()
 
     start = time.time()
-    sent = word_tokenize(reviews[1])
-    process_sent = []
-    for i in sent:
-        if i not in stop_words:
-            process_sent.append(i)
 
-    ys = calculate_ys(process_sent, E, unique_words)
+    ys = calculate_ys(reviews[1], E, unique_words)
 
-    print(calculate_zs(process_sent, M, ys, E, unique_words))
+    print(calculate_zs(reviews[1], M, ys, E, unique_words))
 
     print(time.time() - start)
