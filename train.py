@@ -27,14 +27,13 @@ class Model(nn.Module):
         # Forward pass of the review given
         ys = calculate_ys(input, self.E, self.unique_words)
         zs = calculate_zs(input, self.M, ys, self.E, self.unique_words)
-        rs = calculate_rs()
+        rs = calculate_rs(self.T, self.W, zs, self.B)
 
 
-
-# Training of the Model
+# Parameters
 M = np.random.randn(200, 200)
-# W declaration
-# b declaration
+W = np.random.randn(200, 200)
+W = np.random.randn(200, 1)
 
 infile = open('src/E.pickle','rb')
 E = pickle.load(infile)
