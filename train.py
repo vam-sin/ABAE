@@ -69,26 +69,19 @@ T = torch.tensor(T, requires_grad=True)
 # Model Instantiation
 abae = ABAE_Model(M, E, unique_words, T, W, b)
 
+optimizer = optim.Adam([M, W, b, T], lr=lr)
+
 # Training of the model
 for i in range(epochs):
     epoch_loss = 0.0
+    optimizer.zero_grad()
     print("Epoch Number: " + str(i))
     for j in range(1, len(reviews)):
         rs, ys, zs = abae(reviews[j])
         loss = regularized_loss_value(rs, zs, ys, T, l)
-        epoch_loss += loss
+        epoch_loss += loss.sum()
 
-        print(loss)
-        loss.backward()
-
-        M.data -= lr * M.grad.data
-        W.data -= lr * W.grad.data
-        b.data -= lr * b.grad.data
-        T.data -= lr * T.grad.data
-
-        M.grad.data.zero_()
-        W.grad.data.zero_()
-        b.grad.data.zero_()
-        T.grad.data.zero_()
+        loss.sum().backward()
+        optimizer.step()
 
     print("Epoch Loss: " + str(epoch_loss) +"\n")
