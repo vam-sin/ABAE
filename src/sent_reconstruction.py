@@ -1,13 +1,19 @@
 # Reconstructs the sentence
-from scipy.special import softmax
+from torch.nn import Softmax
 import numpy as np
+import torch
 
 def calculate_pt(W, zs, b):
-    return softmax(np.matmul(W, zs) + b)
+    interm = torch.matmul(W, zs) + b
+    m = Softmax(dim = 0)
+
+    return m(interm)
 
 def calculate_rs(T, W, zs, b):
-    T = T.T
+    zs = torch.from_numpy(zs)
+    # T = T.t()
     pt = calculate_pt(W, zs, b)
-    rs = np.matmul(T, pt)
+    pt = pt.type(torch.DoubleTensor)
+    rs = torch.matmul(T, pt)
 
     return rs

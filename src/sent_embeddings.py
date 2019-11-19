@@ -1,6 +1,7 @@
-from word2vec import get_word_embedding
+from src.word2vec import get_word_embedding
 import numpy as np
 import math
+import torch
 import time
 import pickle
 from nltk.tokenize import word_tokenize
@@ -26,14 +27,15 @@ def calculate_di(word, M, ys, E, unique_words):
     ew = get_word_embedding(word, E, unique_words)
 
     ew = np.asarray(ew)
-    M = np.asarray(M)
+    ew = torch.from_numpy(ew)
     ys = np.asarray(ys)
+    ys = torch.from_numpy(ys)
+    # print(ew)
+    # ew = ew.t()
+    # print(ew)
+    interm = torch.matmul(ew, M)
 
-    ew = ew.T
-
-    interm = np.matmul(ew, M)
-
-    return np.matmul(interm, ys)
+    return torch.matmul(interm, ys)
 
 def calculate_ai(word, sentence, M, ys, E, unique_words):
     num = math.exp(calculate_di(word, M, ys, E, unique_words))
