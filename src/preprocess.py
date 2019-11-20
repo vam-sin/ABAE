@@ -35,7 +35,7 @@ def generate_unique_words(reviews):
     print("Unique Words Generation")
     unique_words = []
     words = []
-    for i in range(1, len(reviews)):
+    for i in range(len(reviews)):
         rev = word_tokenize(reviews[i])
         for j in rev:
             if j not in stop_words:
@@ -52,4 +52,4 @@ def generate_unique_words(reviews):
 if __name__ == '__main__':
     reviews = generate_dataset()
     unique_words = generate_unique_words(reviews)
-    print(unique_words)
+    # print(unique_words)

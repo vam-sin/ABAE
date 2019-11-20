@@ -81,7 +81,7 @@ for i in range(epochs):
     epoch_loss = 0.0
     optimizer.zero_grad()
     print("Epoch Number: " + str(i))
-    j = 1
+    j = 0
     while (len(reviews)-m)-j >= 0:
         # Negative Sampling
         loss = 0.0
@@ -111,4 +111,4 @@ pickle.dump(T ,outfile)
 outfile.close()
 
 # Print all the aspects
-retrieve_aspects(T)
+retrieve_aspects(T, 1)
