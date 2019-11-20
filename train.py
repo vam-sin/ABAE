@@ -10,6 +10,7 @@ from src.sent_embeddings import calculate_ys, calculate_zs
 from src.sent_reconstruction import calculate_rs
 from src.hinge_loss import regularized_loss_value
 from src.aspect_retrieval import retrieve_aspects
+from src.coherence_score import coherence_score
 from torch.autograd import Variable
 import random
 
@@ -24,7 +25,7 @@ import random
 epochs = 100
 l = 1 # lambda hyperparameter
 lr = 0.001 # learning rate
-m = 20 # negative samples for each input
+m = 30 # negative samples for each input
 
 # Model
 class ABAE_Model(nn.Module):
@@ -112,3 +113,7 @@ outfile.close()
 
 # Print all the aspects
 retrieve_aspects(T, 1)
+
+# Calculate Coherence Score
+T = T.detach().numpy()
+cs = coherence_score(T, 5, reviews)

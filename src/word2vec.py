@@ -29,8 +29,13 @@ def get_word_embedding(word, E, unique_words):
 
 if __name__ == '__main__':
 
-    # Load pre-trained model
+    # Load model trained on the dataset
     model = Word2Vec.load('model.bin')
+
+    # Load Google-news pretrained file
+    # model = Word2Vec.load('GoogleNews-vectors-negative300.bin.gz')
+
+    print("Loaded Model")
 
     infile = open('unique_words.pickle','rb')
     unique_words = pickle.load(infile)

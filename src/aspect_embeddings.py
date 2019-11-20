@@ -15,7 +15,7 @@ if __name__ == '__main__':
     for i in cluster_centres:
         T.append(i)
 
-    print(len(T))
+    # print(len(T))
 
     outfile = open('T.pickle','wb')
     pickle.dump(T ,outfile)
