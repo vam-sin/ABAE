@@ -11,6 +11,7 @@ from src.sent_reconstruction import calculate_rs
 from src.hinge_loss import regularized_loss_value
 from src.aspect_retrieval import retrieve_aspects
 from torch.autograd import Variable
+import random
 
 # Tasks
 # 1. Use the functions to get the aspects. Done
@@ -76,6 +77,7 @@ optimizer = optim.Adam([M, W, b, T], lr=lr)
 
 # Training of the model
 for i in range(epochs):
+    random.shuffle(reviews)
     epoch_loss = 0.0
     optimizer.zero_grad()
     print("Epoch Number: " + str(i))
