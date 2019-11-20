@@ -4,6 +4,8 @@ import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
 import pickle
+import nltk
+nltk.download('punkt')
 from src.sent_embeddings import calculate_ys, calculate_zs
 from src.sent_reconstruction import calculate_rs
 from src.hinge_loss import regularized_loss_value
@@ -89,7 +91,7 @@ for i in range(epochs):
 
         loss.sum().backward()
         optimizer.step()
-        print(j)
+        # print(j)
         j += m
 
     print("Epoch Loss: " + str(epoch_loss) +"\n")
