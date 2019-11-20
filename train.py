@@ -22,7 +22,7 @@ from torch.autograd import Variable
 # Hyperparameters
 epochs = 100
 l = 1 # lambda hyperparameter
-lr = 0.0001 # learning rate
+lr = 0.001 # learning rate
 m = 20 # negative samples for each input
 
 # Model
@@ -83,11 +83,18 @@ for i in range(epochs):
     while (len(reviews)-m)-j >= 0:
         # Negative Sampling
         loss = 0.0
+        list_rs = []
+        list_ys = []
+        list_zs = []
         for k in range(j, j+m):
             rs, ys, zs = abae(reviews[k])
-            rev_loss = regularized_loss_value(rs, zs, ys, T, l)
-            loss += rev_loss.sum()
-            epoch_loss += rev_loss.sum()
+            list_rs.append(rs)
+            list_ys.append(ys)
+            list_zs.append(zs)
+
+        rev_loss = regularized_loss_value(list_rs, list_zs, list_ys, T, l)
+        loss += rev_loss.sum()
+        epoch_loss += rev_loss.sum()
 
         loss.sum().backward()
         optimizer.step()

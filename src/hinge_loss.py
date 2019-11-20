@@ -15,10 +15,15 @@ def calculate_jtheta(rs, zs, ys):
 def calculate_utheta(T):
     return (torch.matmul(T, T.t()) - torch.eye(14).type(torch.DoubleTensor))
 
-def regularized_loss_value(rs, zs, ys, T, l):
-    ys = torch.from_numpy(ys)
-    zs = torch.from_numpy(zs)
-    ys = ys.type(torch.DoubleTensor)
-    zs = zs.type(torch.DoubleTensor)
+def regularized_loss_value(list_rs, list_zs, list_ys, T, l):
+    # ni is same as yi
+    jtheta = 0.0
+    for i in range(len(list_rs)):
+        ys = torch.from_numpy(list_ys[i])
+        zs = torch.from_numpy(list_zs[i])
+        ys = ys.type(torch.DoubleTensor)
+        zs = zs.type(torch.DoubleTensor)
 
-    return calculate_jtheta(rs, zs, ys) + (l*calculate_utheta(T))
+        jtheta += calculate_jtheta(list_rs[i], zs, ys)
+
+    return jtheta + (l*calculate_utheta(T))
